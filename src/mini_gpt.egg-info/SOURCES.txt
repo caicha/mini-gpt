@@ -1,0 +1,13 @@
+README.md
+pyproject.toml
+src/__init__.py
+src/dataset.py
+src/generate.py
+src/model.py
+src/trainer.py
+src/utils.py
+src/mini_gpt.egg-info/PKG-INFO
+src/mini_gpt.egg-info/SOURCES.txt
+src/mini_gpt.egg-info/dependency_links.txt
+src/mini_gpt.egg-info/requires.txt
+src/mini_gpt.egg-info/top_level.txt
