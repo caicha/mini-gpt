@@ -1,2 +1,3 @@
-mini-gpt/.venv
+.venv
 .idea
+dist

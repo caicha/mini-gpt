@@ -98,7 +98,9 @@ class Block(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # 残差连接：x + 子层(x)
+        # 残差连接：输入 + 经过注意力层的结果
         x = x + self.sa(self.ln1(x))
+        # 残差连接：输入 + 经过前馈网络的结果
         x = x + self.ffwd(self.ln2(x))
         return x
 
@@ -114,7 +116,7 @@ class MiniGPT(nn.Module):
         self.token_embedding = nn.Embedding(config.vocab_size, config.n_embd)
         self.position_embedding = nn.Embedding(config.block_size, config.n_embd)
 
-        # Transformer层堆叠
+        # Transformer层堆叠：堆叠多层 Block
         self.blocks = nn.Sequential(*[
             Block(config) for _ in range(config.n_layer)
         ])
