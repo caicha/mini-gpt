@@ -34,8 +34,11 @@ def main():
     device = get_device()
     print(f"使用设备: {device}")
 
+    # import numpy
+    # 在加载前添加安全全局类型
+    # torch.serialization.add_safe_globals([numpy._core.multiarray.scalar, numpy.dtype])
     # 加载检查点
-    checkpoint = torch.load(args.checkpoint, map_location=device)
+    checkpoint = torch.load(args.checkpoint, map_location=device, weights_only=False)
 
     # 恢复模型配置
     from config.config import ModelConfig
