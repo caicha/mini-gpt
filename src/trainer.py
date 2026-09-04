@@ -85,6 +85,12 @@ class Trainer:
         for param_group in self.optimizer.param_groups:
             param_group['lr'] = lr
 
+        """
+        这个“采样→前向→反向→更新”的过程会被重复成千上万次。
+        每一次，所有参数（包括 w）都会向损失减小的方向微调。
+        随着训练的进行，损失 L 会逐渐下降，模型的表现会越来越好。
+        """
+
         # 采样batch
         x, y = get_batch(
             self.dataset,
@@ -93,16 +99,18 @@ class Trainer:
             self.device
         )
 
-        # 前向传播
+        # 前向传播与损失计算
         logits, loss = self.model(x, y)
 
-        # 反向传播
+        # 反向传播与梯度计算：计算损失对所有可学习参数的梯度。
         self.optimizer.zero_grad(set_to_none=True)
         loss.backward()
 
         # 梯度裁剪（防止梯度爆炸）
+        # 如果所有梯度的平方根之和（即梯度范数）超过了设定的阈值 gradient_clip=1.0，就会把整个梯度向量按比例缩小。
         torch.nn.utils.clip_grad_norm_(self.model.parameters(), cfg.gradient_clip)
 
+        # 优化器更新参数：利用梯度调整参数，使损失下降。
         self.optimizer.step()
 
         return loss.item()
