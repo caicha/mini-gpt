@@ -73,7 +73,10 @@ def get_batch(
         y: (batch_size, block_size)
     """
     # 随机选择batch_size个起始位置
+    # 在安全范围内（0 到 len(data)-block_size）随机抽取 batch_size 个起始位置。
+    # ix = torch.randint(0, 6, (3,))  # 从一个包含0,1,2,3,4,5的集合中随机取3个数 ix = [2, 5, 1]
     ix = torch.randint(len(dataset) - block_size, (batch_size,))
+    # 取出长度为block_size子序列，进行堆叠成(batch_size, block_size)
     x = torch.stack([dataset[i][0] for i in ix])
     y = torch.stack([dataset[i][1] for i in ix])
     return x.to(device), y.to(device)

@@ -146,6 +146,11 @@ class MiniGPT(nn.Module):
         Returns:
             logits: (B, T, vocab_size)
             loss: 交叉熵损失（如果targets不为None）
+
+        logits 的形状是 (批次大小, 序列长度, 词典大小)，比如 (2, 4, 5)。
+        F.cross_entropy 要求输入是 (N, C) 和 (N,) 的形状，其中 N 是样本总数，C 是类别数。
+        1、logits.view(-1, logits.size(-1))：将前两维 (2, 4) 展平为 8，变成 (8, 5)。这就像把两段文本共8个字符的预测，全部平铺开来，当作8个独立的“样本”。
+        2、targets.view(-1)：把目标 (2, 4) 展平成 (8,)。
         """
         B, T = idx.shape
         assert T <= self.config.block_size, f"序列长度{T}超过block_size{self.config.block_size}"
@@ -167,6 +172,10 @@ class MiniGPT(nn.Module):
             # 重塑为二维张量以便计算交叉熵
             logits_flat = logits.view(-1, logits.size(-1))
             targets_flat = targets.view(-1)
+            # 交叉熵损失的计算分为两步：
+            # 1、Softmax：将 logits 转换成概率分布 p。
+            # 2、负对数似然：取真实类别对应的概率，计算其负对数。
+            # 3、2步中的结果求平均
             loss = F.cross_entropy(logits_flat, targets_flat)
 
         return logits, loss

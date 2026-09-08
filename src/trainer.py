@@ -54,8 +54,11 @@ class Trainer:
         for name, param in self.model.named_parameters():
             if param.requires_grad:
                 if 'bias' in name or 'ln' in name or 'norm' in name:
+                    # no_decay_params（包含偏置 bias、层归一化 ln、归一化 norm 层的参数）：
+                    # 这些参数不应用权重衰减。因为它们的作用是调整偏移或做归一化，不需要被“约束”到接近零。
                     no_decay_params.append(param)
                 else:
+                    # decay_params（包含权重矩阵）：应用 weight_decay，通过惩罚其平方和，鼓励权重值尽量小，防止模型过拟合。
                     decay_params.append(param)
 
         param_groups = [
@@ -119,6 +122,7 @@ class Trainer:
     def evaluate(self) -> Dict[str, float]:
         """在验证集上评估模型"""
         cfg = self.training_config
+        # 将模型切换到评估模式，这会禁用 Dropout 等训练专用层，确保输出稳定。
         self.model.eval()
 
         total_loss = 0.0
