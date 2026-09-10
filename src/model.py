@@ -113,7 +113,9 @@ class MiniGPT(nn.Module):
         self.config = config
 
         # 输入嵌入：词嵌入 + 位置嵌入
+        # 随机生成一个形状为 (vocab_size, n_embd) 的矩阵，里面的数值通常从均值为0、标准差为1的正态分布中采样
         self.token_embedding = nn.Embedding(config.vocab_size, config.n_embd)
+        # 随机生成一个形状为 (block_size, n_embd) 的矩阵，里面的数值通常从均值为0、标准差为1的正态分布中采样
         self.position_embedding = nn.Embedding(config.block_size, config.n_embd)
 
         # Transformer层堆叠：堆叠多层 Block
