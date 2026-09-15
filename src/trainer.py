@@ -105,17 +105,27 @@ class Trainer:
         # 前向传播与损失计算
         logits, loss = self.model(x, y)
 
-        # 反向传播与梯度计算：计算损失对所有可学习参数的梯度。
+        # ========== 训练一步的核心流程 ==========
+
+        # 1. 清空旧梯度
+        # PyTorch默认会累加梯度，不清空会导致梯度错误累积
         self.optimizer.zero_grad(set_to_none=True)
+
+        # 2. 反向传播：计算所有可学习参数的梯度
+        # 从损失出发，利用链式法则自动计算 ∂L/∂θ（θ代表所有参数）
         loss.backward()
 
-        # 梯度裁剪（防止梯度爆炸）
-        # 如果所有梯度的平方根之和（即梯度范数）超过了设定的阈值 gradient_clip=1.0，就会把整个梯度向量按比例缩小。
+        # 3. 梯度裁剪（防止梯度爆炸）
+        # 计算所有参数梯度的L2范数 √(Σg²)，如果超过阈值 gradient_clip=1.0，
+        # 则将所有梯度按比例缩小，使总范数等于阈值
         torch.nn.utils.clip_grad_norm_(self.model.parameters(), cfg.gradient_clip)
 
-        # 优化器更新参数：利用梯度调整参数，使损失下降。
+        # 4. 优化器更新参数
+        # AdamW根据梯度、动量和自适应学习率更新所有参数
+        # 核心思想：w_new = w - lr * (自适应梯度 + 权重衰减)
         self.optimizer.step()
 
+        # 5. 返回损失值（Python浮点数，用于日志记录）
         return loss.item()
 
     @torch.no_grad()
