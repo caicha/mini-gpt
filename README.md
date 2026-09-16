@@ -20,22 +20,31 @@
 ## 安装依赖
 ```bash
 uv pip install -e . --default-index https://pypi.tuna.tsinghua.edu.cn/simple
+```
 
 ## 开始训练
 
 ### 使用默认配置训练
+```bash
 python train.py
+```
 
 ### 自定义配置
+```bash
 python train.py --n_embd 256 --n_head 8 --n_layer 6 --max_iters 5000
+```
 
 ## 生成文本
 
 ### 使用最佳模型生成
+```bash
 python generate.py --prompt "To be" --max_tokens 200
+```
 
 ### 使用最新模型生成
+```bash
 python generate.py --checkpoint checkpoints/latest.pt --prompt "The"
+```
 
 ## 常见问题
 ### Q: 训练时显存不足怎么办？
