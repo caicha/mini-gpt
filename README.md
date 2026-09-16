@@ -37,10 +37,6 @@ python generate.py --prompt "To be" --max_tokens 200
 ### 使用最新模型生成
 python generate.py --checkpoint checkpoints/latest.pt --prompt "The"
 
-## Jupyter Notebook
-
-### jupyter notebook demo.ipynb
-
 ## 常见问题
 ### Q: 训练时显存不足怎么办？
 
