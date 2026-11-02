@@ -19,8 +19,7 @@
 
 ## 安装依赖
 ```bash
-uv pip install -e . --default-index https://pypi.tuna.tsinghua.edu.cn/simple
-```
+uv pip install -e .
 
 ## 开始训练
 
