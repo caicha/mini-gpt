@@ -20,6 +20,7 @@
 ## 安装依赖
 ```bash
 uv pip install -e .
+```
 
 ## 开始训练
 
